@@ -1,8 +1,64 @@
+//! This crate provides a `field_offsets` member over `struct` declaration
+//! that adorns the `FieldOffsets` macro.
+
+//! For example, this can be used in FFI scenarios where asserting the offset
+//! of each field among the various languages struct becomes a concern.
+
+//! ```rust
+//! use struct_field_offsets::FieldOffsets;
+//!
+//! // at declaration site
+//! #[derive(FieldOffsets)]
+//! #[repr(C)]
+//! struct Data {
+//!     x: i32,
+//!     y: i32,
+//!     label: [u8;8]
+//! }
+//! 
+//! // in the code
+//! let offsets = Data::field_offsets();
+//! for (name,offset) in offsets {
+//! println!("field {name} offset is {offset}.");
+//! }
+//! // prints:
+//! // > field x offset is 0.
+//! // > field y offset is 4.
+//! // > field label offset is 8.
+//! ```
+//! 
+//! In your Cargo.toml:
+//! ```toml
+//! [dependencies]
+//! struct-field-offsets = "*"
+//! ```
+//!
 extern crate proc_macro;
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, DeriveInput, Data, Fields, Ident};
 
+/// ```rust
+/// use struct_field_offsets::FieldOffsets;
+///
+/// // at declaration site
+/// #[derive(FieldOffsets)]
+/// #[repr(C)]
+/// struct Data {
+///     x: i32,
+///     y: i32,
+///     label: [u8;8]
+/// }
+///
+/// // in the code
+/// let offsets = Data::field_offsets();
+/// for (name,offset) in offsets {
+///     println!("field {name} offset is {offset}.");
+/// }
+/// // prints:
+/// // > field x offset is 0.
+/// // > field y offset is 4.
+/// // > field label offset is 8.
 #[proc_macro_derive(FieldOffsets)]
 pub fn field_offsets_derive(input: TokenStream) -> TokenStream {
     // Parse the input tokens into a syntax tree
