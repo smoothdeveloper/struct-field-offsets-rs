@@ -2,7 +2,11 @@
 name = "struct-field-offsets"
 version = "0.0.1"
 edition = "2024"
-
+license = "MIT OR Apache-2.0"
+keywords = ["ffi"]
+description = "Procedural macro to retrieve field names and offsets from a struct."
+repository = "https://github.com/smoothdeveloper/struct-field-offsets-rs"
+readme = "readme.md"
 [lib]
 proc-macro = true
 
